@@ -8,52 +8,63 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-    private final OrderService orderService;
 
+    private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-
+    /**
+     * Create a new order.
+     */
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderProcessingDTO dto) {
         Order created = orderService.createOrder(dto);
         return ResponseEntity.created(URI.create("/api/orders/" + created.getId())).body(created);
     }
 
-
+    /**
+     * Get a single order by ID.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
-        return orderService.getOrder(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Order order = orderService.getOrder(id); // throws OrderNotFoundException if not found
+        return ResponseEntity.ok(order);
     }
 
-
+    /**
+     * List all orders or filter by status.
+     */
     @GetMapping
     public ResponseEntity<List<Order>> listOrders(@RequestParam Optional<OrderStatus> status) {
-        return ResponseEntity.ok(orderService.listOrders(status));
+        List<Order> orders = orderService.listOrders(status);
+        return ResponseEntity.ok(orders);
     }
 
-
+    /**
+     * Cancel an existing order.
+     * Throws OrderNotFoundException or OrderAlreadyCancelledException if invalid.
+     */
     @PostMapping("/{id}/cancel")
     public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
-        boolean ok = orderService.cancelOrder(id);
-        return ok ? ResponseEntity.noContent().build() : ResponseEntity.status(409).build();
+        orderService.cancelOrder(id); // may throw exception, handled globally
+        return ResponseEntity.noContent().build();
     }
 
-
+    /**
+     * Update order status.
+     */
     @PostMapping("/{id}/status")
     public ResponseEntity<Order> updateStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
-        Optional<Order> updated = orderService.updateStatus(id, status);
-        return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Order updated = orderService.updateStatus(id, status); // may throw exception
+        return ResponseEntity.ok(updated);
     }
 }
