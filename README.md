@@ -34,3 +34,6 @@ It allows customers to:
 | ⏱️ Auto Job | Background scheduler updates PENDING → PROCESSING every 5 minutes. |
 
 ---
+
+**[Google Drive Snapshots Folder](https://drive.google.com/drive/folders/1vDJXoyEJti4BWLwxdV4KhHG2CHzd3n1t?usp=sharing)**
+Postman collection is present in the project"Orders.postman_collection"
