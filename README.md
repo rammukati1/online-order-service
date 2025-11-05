@@ -36,4 +36,4 @@ It allows customers to:
 ---
 
 **[Google Drive Snapshots Folder](https://drive.google.com/drive/folders/1vDJXoyEJti4BWLwxdV4KhHG2CHzd3n1t?usp=sharing)**
-Postman collection is present in the project"Orders.postman_collection"
+Postman collection is present in the project file structure with name"Orders.postman_collection"
